@@ -1,23 +1,33 @@
 import {
-  createRoutesFromElements,
-  createBrowserRouter,
   Route,
-  RouterProvider
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements
 } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Home from "./pages/Home";
+import Login from "./pages/Login";
 import Reg from "./pages/Reg";
 
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route
+     <Route>
+       <Route
         path="/"
         element={<Reg />}
-      >
-        
-      </Route>
+      ></Route>
+      <Route
+        path="/login"
+        element={<Login />}
+      ></Route>
+      <Route
+        path="/home"
+        element={<Home />}
+      ></Route>
+     </Route>
     )
   );
 

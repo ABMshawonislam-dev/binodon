@@ -2,7 +2,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
-import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, sendEmailVerification, signInWithPopup } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword,sendEmailVerification  } from "firebase/auth";
 import React, { useState } from 'react';
 import { RotatingLines } from 'react-loader-spinner';
 import { useNavigate } from 'react-router-dom';
@@ -11,24 +11,24 @@ import regimg from "../assets/regimg.png";
 import waiting from "../assets/waiting.gif";
 
 const MyInput = styled(TextField) ({
-      width: '90%',
-      marginBottom: '20px'
-  });
+    width: '90%',
+    marginBottom: '20px'
+});
 
-  const MyButton = styled(Button)({
-    backgroundColor: '#5F35F5',
-    width: "90%",
-    padding: "20px 0",
-    borderRadius: "86px"
-  });
+const MyButton = styled(Button)({
+  backgroundColor: '#5F35F5',
+  width: "90%",
+  padding: "20px 0",
+  borderRadius: "86px"
+});
 
 
-const Reg = () => {
+
+const Login = () => {
     const auth = getAuth();
     let navigate = useNavigate()
     let [regdata,setRegdata] = useState({
         email:"",
-        fullname:"",
         password:""
     })
     let [loader,setLoader] = useState(false)
@@ -42,33 +42,31 @@ const Reg = () => {
 
     let handleSubmit = ()=>{
         setLoader(true)
-        createUserWithEmailAndPassword(auth, regdata.email, regdata.password).then((userCredential) => {
+        signInWithEmailAndPassword(auth, regdata.email, regdata.password).then((userCredential) => {
             console.log(userCredential)
-            sendEmailVerification(auth.currentUser)
-                .then(() => {
-                    setRegdata({
-                        email:"",
-                        fullname:"",
-                        password:""
-                    })
-                    navigate("/login")
-                    setLoader(false)
-                });
-            
+            if(userCredential.user.emailVerified){
+                setRegdata({
+                    email:"",
+                    password:""
+                })
+                navigate("/home")
+                setLoader(false)
+            }else{
+               
+                toast("Please varify your email")
+                setLoader(false)
+            }
+           
           })
           .catch((error) => {
             const errorCode = error.code;
             console.log(errorCode)
             setLoader(false)
-            if(errorCode){
-                if(errorCode.includes("email")){
-                    toast("Email already in use")
-    
-                }
-                if(errorCode.includes("password")){
-                    toast("please give alteast 6 character")
-                }
+            if(errorCode.includes("login")){
+                toast("Ki hack korte chaw,Sajib er biya")
+
             }
+           
           });
 
         // if(regdata.email == ""){
@@ -114,19 +112,8 @@ const Reg = () => {
 
 
     }
-
-    let handleSignin = ()=>{
-        const provider = new GoogleAuthProvider();
-        signInWithPopup(auth, provider).then(()=>{
-            navigate("/home")
-        })
-    }
-
-    
-
-
   return (
-      <Grid container >
+    <Grid container >
         {/* <button onClick={notify}>Notify!</button> */}
         {loader
         ?
@@ -135,17 +122,14 @@ const Reg = () => {
         <>
             <Grid item xs={6}>
       <div className='regbox'>
-        
         <h1>Get started with easily register</h1>
         <p>Free register and you can enjoy it</p>
-        <Button onClick={handleSignin}>Google Signin</Button>
+        
         <div>
         <MyInput onChange={handleChange} name='email' id="outlined-basic" label="Email Address" variant="outlined" value={regdata.email}/>
        
         </div>
-        <div>
-        <MyInput type='text' onChange={handleChange}  name='fullname' id="outlined-basic" label="Fullname" variant="outlined" value={regdata.fullname}/>
-        </div>
+       
         <div>
         <MyInput type='password' onChange={handleChange} name='password' id="outlined-basic" label="Password" variant="outlined" value={regdata.password}/>
         </div>
@@ -175,4 +159,4 @@ const Reg = () => {
   )
 }
 
-export default Reg
+export default Login
