@@ -9,6 +9,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Reg from "./pages/Reg";
+import RootLayouts from "./components/RootLayouts";
+import Msg from "./pages/Msg";
+import Notification from "./pages/Notification";
+
 
 
 function App() {
@@ -24,9 +28,29 @@ function App() {
         element={<Login />}
       ></Route>
       <Route
-        path="/home"
-        element={<Home />}
-      ></Route>
+        path="/page"
+        element={<RootLayouts />}
+      >
+         <Route
+          path="home"
+          element={<Home />}
+          >
+
+          </Route>
+         <Route
+          path="msg"
+          element={<Msg />}
+          >
+
+          </Route>
+         <Route
+          path="notification"
+          element={<Notification />}
+          >
+
+          </Route>
+
+      </Route>
      </Route>
     )
   );
