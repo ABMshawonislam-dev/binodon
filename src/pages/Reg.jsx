@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import regimg from "../assets/regimg.png";
 import waiting from "../assets/waiting.gif";
+import { getDatabase, ref, set } from "firebase/database";
 
 const MyInput = styled(TextField) ({
       width: '90%',
@@ -24,6 +25,7 @@ const MyInput = styled(TextField) ({
 
 
 const Reg = () => {
+  const db = getDatabase();
     const auth = getAuth();
     let navigate = useNavigate()
     let [regdata,setRegdata] = useState({
@@ -43,9 +45,14 @@ const Reg = () => {
     let handleSubmit = ()=>{
         setLoader(true)
         createUserWithEmailAndPassword(auth, regdata.email, regdata.password).then((userCredential) => {
-            console.log(userCredential)
+            console.log(userCredential.user.uid)
             sendEmailVerification(auth.currentUser)
                 .then(() => {
+                  set(ref(db, 'users/'+ userCredential.user.uid), {
+                    username: regdata.fullname,
+                    email: userCredential.user.email,
+                    profile_picture : "https://firebasestorage.googleapis.com/v0/b/binodon-c2d4f.appspot.com/o/flat-male-avatar-image-beard-hairstyle-businessman-profile-icon-vector-179285629.webp?alt=media&token=86a5b407-16df-4eae-8e36-c8565f673ff1"
+                  });
                     setRegdata({
                         email:"",
                         fullname:"",

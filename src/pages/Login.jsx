@@ -44,18 +44,18 @@ const Login = () => {
         setLoader(true)
         signInWithEmailAndPassword(auth, regdata.email, regdata.password).then((userCredential) => {
             console.log(userCredential)
-            if(userCredential.user.emailVerified){
+            // if(userCredential.user.emailVerified){
                 setRegdata({
                     email:"",
                     password:""
                 })
                 navigate("/home")
                 setLoader(false)
-            }else{
+            // }else{
                
-                toast("Please varify your email")
-                setLoader(false)
-            }
+            //     toast("Please varify your email")
+            //     setLoader(false)
+            // }
            
           })
           .catch((error) => {
