@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 const Block = () => {
   return (
     <div className='box'>
-    <h2> GroupList</h2>
+    <h2>Blocked Users</h2>
     <div className='list'>
        <img src={profileimg}/>
        <h3>Friends Reunion</h3>

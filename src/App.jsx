@@ -12,6 +12,7 @@ import Reg from "./pages/Reg";
 import RootLayouts from "./components/RootLayouts";
 import Msg from "./pages/Msg";
 import Notification from "./pages/Notification";
+import Setting from "./pages/Setting";
 
 
 
@@ -28,27 +29,36 @@ function App() {
         element={<Login />}
       ></Route>
       <Route
-        path="/page"
+        path="/home"
         element={<RootLayouts />}
       >
          <Route
-          path="home"
-          element={<Home />}
-          >
-
+            path="/home"
+            element={<Home />}
+            >
           </Route>
+
          <Route
-          path="msg"
-          element={<Msg />}
+            path="/home/msg"
+            element={<Msg />}
           >
-
           </Route>
+
          <Route
-          path="notification"
-          element={<Notification />}
+            path="/home/notification"
+            element={<Notification />}
           >
-
           </Route>
+
+         <Route
+            path="/home/settings"
+            element={<Setting />}
+          >
+          </Route>
+
+     
+          
+
 
       </Route>
      </Route>
