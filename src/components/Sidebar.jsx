@@ -33,19 +33,19 @@ const Sidebar = () => {
       </div>
       <div className='icons'>
        
-        <Link to="/home" className={window.location.pathname == "/home" && "active"}>
+        <Link to="/home" className={window.location.pathname == "/home" ? "active" : ""}>
          <FaHome className='icon'/><br/>
         </Link>
 
-        <Link to="/home/msg" className={window.location.pathname == "/home/msg" && "active"}>
+        <Link to="/home/msg" className={window.location.pathname == "/home/msg" ? "active" : ""}>
           <LuMessageSquare className='icon'/><br/>
         </Link>
 
-        <Link to="/home/notification" className={window.location.pathname == "/home/notification" && "active"}>
+        <Link to="/home/notification" className={window.location.pathname == "/home/notification" ? "active" : ""}>
          <IoIosNotifications className='icon'/><br/>
         </Link>
 
-        <Link to="/home/settings" className={window.location.pathname == "/home/settings" && "active"}>
+        <Link to="/home/settings" className={window.location.pathname == "/home/settings" ? "active" : ""}>
          <CiSettings className='icon'/> <br />
         </Link>
 
