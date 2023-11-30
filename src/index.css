@@ -128,3 +128,16 @@ margin: 20px 0;
 .logout{
   padding-top: 80px;
 }
+
+.previewbox{
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: rgb(211, 211, 211);
+}
+
+.img-preview{
+  width: 100px;
+  height: 100px;
+}

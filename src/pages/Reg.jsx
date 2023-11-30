@@ -2,7 +2,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
-import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, sendEmailVerification, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, sendEmailVerification, signInWithPopup,updateProfile  } from "firebase/auth";
 import React, { useEffect, useState } from 'react';
 import { RotatingLines } from 'react-loader-spinner';
 import { Link, useNavigate } from 'react-router-dom';
@@ -50,6 +50,9 @@ const Reg = () => {
     let handleSubmit = ()=>{
         setLoader(true)
         createUserWithEmailAndPassword(auth, regdata.email, regdata.password).then((userCredential) => {
+          updateProfile(auth.currentUser, {
+            displayName: regdata.fullname, photoURL: "https://firebasestorage.googleapis.com/v0/b/binodon-c2d4f.appspot.com/o/flat-male-avatar-image-beard-hairstyle-businessman-profile-icon-vector-179285629.webp?alt=media&token=86a5b407-16df-4eae-8e36-c8565f673ff1"
+          }).then(() => {
             sendEmailVerification(auth.currentUser)
                 .then(() => {
                   set(ref(db, 'users/'+ userCredential.user.uid), {
@@ -65,6 +68,8 @@ const Reg = () => {
                     navigate("/login")
                     setLoader(false)
                 });
+          })
+           
             
           })
           .catch((error) => {

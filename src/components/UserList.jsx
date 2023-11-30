@@ -3,19 +3,25 @@ import profileimg from "../assets/profile.png"
 import Button from '@mui/material/Button';
 import { getDatabase, ref, onValue } from "firebase/database";
 import TextField from '@mui/material/TextField';
+import { useSelector } from 'react-redux';
 
 const UserList = () => {
    const db = getDatabase();
 
    let [UserList,setUserList] = useState([])
    let [searchUserList,setSearchUserList] = useState([])
-
+   let userInfo = useSelector((state)=>state.activeUser.value)
    useEffect(()=>{
       const userRef = ref(db, 'users');
       onValue(userRef, (snapshot) => {
          let arr = []
          snapshot.forEach(item=>{
-            arr.push(item.val())
+            console.log(item.key,userInfo.uid)
+            if(item.key != userInfo.uid){
+
+               arr.push(item.val())
+            }
+           
             
          })
          setUserList(arr)
