@@ -18,6 +18,7 @@ import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 
 import { getStorage, ref,uploadString,getDownloadURL  } from "firebase/storage";
+import { getDatabase, ref as dref, set } from "firebase/database";
 
 const defaultSrc =
   "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
@@ -38,6 +39,7 @@ const style = {
 
 const Sidebar = () => {
   const auth = getAuth();
+  const db = getDatabase();
   const storage = getStorage();
   let navigate =useNavigate()
   let dispatch =useDispatch()
@@ -88,10 +90,17 @@ const Sidebar = () => {
           updateProfile(auth.currentUser, {
              photoURL: downloadURL
           }).then(()=>{
-            console.log("user")
-            localStorage.setItem("user",JSON.stringify({...userInfo,photoURL:downloadURL}))
-            dispatch(logged({...userInfo,photoURL:downloadURL}))
-            setImage("")
+            set(dref(db, 'users/' + userInfo.uid), {
+              username: userInfo.displayName,
+              email: userInfo.email,
+              profile_picture : downloadURL
+            }).then(()=>{
+              console.log("user")
+              localStorage.setItem("user",JSON.stringify({...userInfo,photoURL:downloadURL}))
+              dispatch(logged({...userInfo,photoURL:downloadURL}))
+              setImage("")
+            })
+           
           })
         });
       });

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import profileimg from "../assets/profile.png"
 import Button from '@mui/material/Button';
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue,set,push } from "firebase/database";
 import TextField from '@mui/material/TextField';
 import { useSelector } from 'react-redux';
 
@@ -10,6 +10,9 @@ const UserList = () => {
 
    let [UserList,setUserList] = useState([])
    let [searchUserList,setSearchUserList] = useState([])
+   let [frid,setFrid] = useState([])
+   let [fid,setFid] = useState([])
+
    let userInfo = useSelector((state)=>state.activeUser.value)
    useEffect(()=>{
       const userRef = ref(db, 'users');
@@ -19,7 +22,7 @@ const UserList = () => {
             console.log(item.key,userInfo.uid)
             if(item.key != userInfo.uid){
 
-               arr.push(item.val())
+               arr.push({...item.val(),userid:item.key})
             }
            
             
@@ -28,10 +31,50 @@ const UserList = () => {
       });
    },[])
 
+   useEffect(()=>{
+      const friendRequestRef = ref(db, 'friendrequest');
+      onValue(friendRequestRef, (snapshot) => {
+         let arr = []
+         snapshot.forEach(item=>{
+               arr.push(item.val().whosendid+item.val().whoreceiveid)
+         })
+         setFrid(arr)
+      });
+   },[])
+
+   
+   useEffect(()=>{
+      const friendRequestRef = ref(db, 'friends');
+      onValue(friendRequestRef, (snapshot) => {
+         let arr = []
+         snapshot.forEach(item=>{
+               arr.push(item.val().whosendid+item.val().whoreceiveid)
+         })
+         setFid(arr)
+      });
+   },[])
+
    let handlesearch = (e)=>{
     let user = UserList.filter(item=>item.username.toLowerCase().includes(e.target.value.toLowerCase()))
-      console.log(user)
       setSearchUserList(user)
+   }
+
+   let handleFriend = (item)=>{
+      console.log({
+         whosendid: userInfo.uid,
+         whosendname: userInfo.displayName,
+         whoreceiveid:item.userid,
+         whoreceivename: item.username
+      })
+      set(push(ref(db, 'friendrequest')), {
+         whosendid: userInfo.uid,
+         whosendname: userInfo.displayName,
+         whoreceiveid:item.userid,
+         whoreceivename: item.username
+       }).then(()=>{
+         console.log("done")
+       })
+     
    }
 
   return (
@@ -44,7 +87,7 @@ const UserList = () => {
       <div className='list'>
        <img src={profileimg}/>
        <h3>{item.username}</h3>
-       <Button variant="contained">Join</Button>
+       <Button variant="contained">+</Button>
     </div>
    ))
     :
@@ -52,7 +95,16 @@ const UserList = () => {
       <div className='list'>
        <img src={item.profile_picture}/>
        <h3>{item.username}</h3>
-       <Button variant="contained">+</Button>
+
+       { frid.includes(userInfo.uid+item.userid) || frid.includes(item.userid+userInfo.uid)  
+       ? 
+       <Button variant="contained" disabled>pending</Button>
+       :fid.includes(userInfo.uid+item.userid) || fid.includes(item.userid+userInfo.uid)
+       ?
+       <Button variant="contained" color='success'>Friends</Button>
+       :
+       <Button variant="contained" onClick={()=>handleFriend(item)}>+</Button>
+       }
     </div>
    ))
     }
